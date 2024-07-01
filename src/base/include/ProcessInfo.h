@@ -1,15 +1,15 @@
 #pragma once
 
 #include <sys/types.h>
-#include <vector>
+
 #include <string>
+#include <vector>
 
 #include "StringPiece.h"
-#include "Types.h"
 #include "Timestamp.h"
+#include "Types.h"
 
-namespace dws {
-namespace ProcessInfo {
+namespace dws::ProcessInfo {
 
 pid_t pid();
 std::string pidString();
@@ -49,6 +49,4 @@ int numThreads();
 
 std::vector<pid_t> threads();
 
-}  // namespace ProcessInfo
-}  // namespace dws
-
+}  // namespace dws::ProcessInfo

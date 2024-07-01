@@ -1,13 +1,13 @@
 #pragma once
 
+#include <cassert>
+#include <condition_variable>
 #include <deque>
 #include <mutex>
-#include <cassert>
 #include <utility>
-#include <condition_variable>
 
-#include "noncopyable.h"
 #include "ThreadAnnotations.h"
+#include "noncopyable.h"
 
 namespace dws {
 
@@ -21,11 +21,7 @@ class BlockQueue : noncopyable {
     queue_type queue_ GUARDED_BY(mutex_);
 
  public:
-    BlockQueue()
-        : mutex_(),
-          notEmpty_(),
-          queue_() {
-    }
+    BlockQueue() : mutex_(), notEmpty_(), queue_() {}
 
     void put(const T &x) {
         std::lock_guard<std::mutex> lock(mutex_);

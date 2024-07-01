@@ -1,12 +1,12 @@
 #pragma once
 
-#include <string>
-#include <cstdint>
 #include <cassert>
+#include <cstdint>
+#include <string>
 
+#include "StringPiece.h"
 #include "Types.h"
 #include "noncopyable.h"
-#include "StringPiece.h"
 
 namespace dws {
 namespace detail {
@@ -14,7 +14,7 @@ namespace detail {
 const int kSmallBuffer = 4000;
 const int kLargeBuffer = 4000 * 1000;
 
-template<int SIZE>
+template <int SIZE>
 class FixedBuffer : noncopyable {
  private:
     char data_[SIZE] = {0};
@@ -26,13 +26,9 @@ class FixedBuffer : noncopyable {
     const char *end() const { return data_ + sizeof data_; }
 
  public:
-    FixedBuffer() : cur_(data_) {
-        setCookie(cookieStart);
-    }
+    FixedBuffer() : cur_(data_) { setCookie(cookieStart); }
 
-    ~FixedBuffer() {
-        setCookie(cookieEnd);
-    }
+    ~FixedBuffer() { setCookie(cookieEnd); }
 
     void append(const char *buf, size_t len) {
         if (implicit_cast<std::size_t>(avail()) > len) {
@@ -48,9 +44,9 @@ class FixedBuffer : noncopyable {
     void add(std::size_t len) { cur_ += len; }
     void reset() { cur_ = data_; }
     void bzero() { memZero(data_, sizeof data_); }
-    const char *debugString();                                      // for used by GDB
+    const char *debugString();  // for used by GDB
     void setCookie(void (*cookie)()) { cookie_ = cookie; }
-    std::string toString() const { return std::string(data_, length()); }     // for used by unit test
+    std::string toString() const { return std::string(data_, length()); }  // for used by unit tests
     StringPiece toStringPiece() const { return StringPiece(data_, length()); }
 };
 
@@ -127,7 +123,7 @@ class LogStream : noncopyable {
 
  private:
     void staticCheck();
-    template<typename T>
+    template <typename T>
     void formatInteger(T);
 
     Buffer buffer_;
@@ -136,7 +132,7 @@ class LogStream : noncopyable {
 
 class Fmt {
  public:
-    template<typename T>
+    template <typename T>
     Fmt(const char *fmt, T val);
     const char *data() const { return buf_; }
     int length() const { return length_; }

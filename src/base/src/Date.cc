@@ -1,7 +1,7 @@
 #include "Date.h"
 
-#include <cstdio>   // snprintf
-#include <ctime>    // struct tm
+#include <cstdio>  // snprintf
+#include <ctime>   // struct tm
 
 namespace dws {
 namespace detail {
@@ -31,19 +31,12 @@ struct Date::YearMonthDay getYearMonthDay(int julianDayNumber) {
 const int Date::kJulianDayOf1970_01_01 = detail::getJulianDayNumber(1970, 1, 1);
 
 Date::Date(int year, int month, int day)
-    : julianDayNumber_(detail::getJulianDayNumber(year, month, day)) {
-}
+    : julianDayNumber_(detail::getJulianDayNumber(year, month, day)) {}
 
 Date::Date(const struct tm &t)
-    : julianDayNumber_(detail::getJulianDayNumber(
-            t.tm_year + 1900,
-            t.tm_mon + 1,
-            t.tm_mday)){
-}
+    : julianDayNumber_(detail::getJulianDayNumber(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday)) {}
 
-Date::YearMonthDay Date::yearMonthDay() const {
-    return detail::getYearMonthDay(julianDayNumber_);
-}
+Date::YearMonthDay Date::yearMonthDay() const { return detail::getYearMonthDay(julianDayNumber_); }
 
 std::string Date::toIsoString() const {
     char buf[32];

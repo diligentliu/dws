@@ -12,18 +12,16 @@
 
 namespace dws {
 
-inline void memZero(void *arr, size_t n) {
-    memset(arr, 0, n);
-}
+inline void memZero(void *arr, size_t n) { memset(arr, 0, n); }
 
 // 实现隐式转换的显示化
-template<typename To, typename From>
+template <typename To, typename From>
 inline To implicit_cast(From const &f) {
     return f;
 }
 
 // 实现向下转换的编译时检查和运行时检查
-template<typename From, typename To>
+template <typename From, typename To>
 inline To down_cast(From *f) {
     // 编译时检查
     if (false) {

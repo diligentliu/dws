@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Types.h"
-
 #include <exception>
 #include <string>
+
+#include "Types.h"
 
 namespace dws {
 
@@ -16,12 +16,8 @@ class Exception : public std::exception {
     explicit Exception(std::string what);
     ~Exception() noexcept override = default;
     // default copy-ctor and operator= are okay.
-    const char* what() const noexcept override {
-        return message_.c_str();
-    }
-    const char* stackTrace() const noexcept {
-        return stack_.c_str();
-    }
+    const char* what() const noexcept override { return message_.c_str(); }
+    const char* stackTrace() const noexcept { return stack_.c_str(); }
 };
 
 }  // namespace dws

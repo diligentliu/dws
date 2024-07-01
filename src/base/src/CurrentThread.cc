@@ -3,12 +3,10 @@
 #include <cxxabi.h>
 #include <execinfo.h>
 
-#include <cstdlib>
 #include <cstddef>
+#include <cstdlib>
 
-namespace dws {
-
-namespace CurrentThread {
+namespace dws::CurrentThread {
 __thread int t_cachedTid = 0;
 __thread char t_tidString[32];
 __thread int t_tidStringLength = 6;
@@ -63,6 +61,4 @@ std::string stackTrace(bool demangle) {
     return stack;
 }
 
-}  // namespace CurrentThread
-
-}  // namespace dws
+}  // namespace dws::CurrentThread

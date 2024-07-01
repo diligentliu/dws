@@ -4,8 +4,6 @@
 namespace dws {
 
 Exception::Exception(std::string msg)
-        : message_(std::move(msg)),
-          stack_(CurrentThread::stackTrace(/*demangle=*/false)) {
-}
+    : message_(std::move(msg)), stack_(CurrentThread::stackTrace(/*demangle=*/false)) {}
 
 }  // namespace dws

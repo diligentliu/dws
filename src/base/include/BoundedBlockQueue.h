@@ -6,9 +6,9 @@
 #include <mutex>
 #include <utility>
 
+#include "ThreadAnnotations.h"
 #include "Types.h"
 #include "noncopyable.h"
-#include "ThreadAnnotations.h"
 
 namespace dws {
 
@@ -77,9 +77,7 @@ class BoundedBlockingQueue : noncopyable {
         return queue_.size();
     }
 
-    size_t capacity() const {
-        return max_size_;
-    }
+    size_t capacity() const { return max_size_; }
 };
 
 }  // namespace dws

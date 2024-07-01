@@ -3,17 +3,17 @@
 #include <endian.h>
 
 #include <algorithm>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <cassert>
-#include <cstdint>
-#include <cstdio>
-#include <cstddef>
 
-#include "noncopyable.h"
 #include "Date.h"
+#include "noncopyable.h"
 
 namespace dws {
 
@@ -75,13 +75,9 @@ class File : noncopyable {
     FILE *fp_;
 
  public:
-    File()
-        : fp_(nullptr) {
-    }
+    File() : fp_(nullptr) {}
 
-    explicit File(const char *file)
-        : fp_(::fopen(file, "rb")) {
-    }
+    explicit File(const char *file) : fp_(::fopen(file, "rb")) {}
 
     ~File() {
         if (fp_) {
@@ -137,9 +133,7 @@ class File : noncopyable {
         return x;
     }
 
-    off_t skip(ssize_t bytes) {
-        return ::fseek(fp_, bytes, SEEK_CUR);
-    }
+    off_t skip(ssize_t bytes) { return ::fseek(fp_, bytes, SEEK_CUR); }
 };
 
 // RFC 8536: https://www.rfc-editor.org/rfc/rfc8536.html
@@ -152,12 +146,9 @@ bool readDataBlock(File *f, struct TimeZone::Data *data, bool v1) {
     const int32_t typecnt = f->readInt32();
     const int32_t charcnt = f->readInt32();
 
-    if (leapcnt != 0)
-        return false;
-    if (isutccnt != 0 && isutccnt != typecnt)
-        return false;
-    if (isstdcnt != 0 && isstdcnt != typecnt)
-        return false;
+    if (leapcnt != 0) return false;
+    if (isutccnt != 0 && isutccnt != typecnt) return false;
+    if (isstdcnt != 0 && isstdcnt != typecnt) return false;
 
     std::vector<int64_t> trans;
     trans.reserve(timecnt);
@@ -208,8 +199,7 @@ bool readTimeZoneFile(const char *zonefile, struct TimeZone::Data *data) {
     if (f.valid()) {
         try {
             std::string head = f.readBytes(4);
-            if (head != "TZif")
-                throw std::logic_error("bad head");
+            if (head != "TZif") throw std::logic_error("bad head");
             std::string version = f.readBytes(1);
             f.readBytes(15);
 
@@ -221,13 +211,12 @@ bool readTimeZoneFile(const char *zonefile, struct TimeZone::Data *data) {
             const int32_t charcnt = f.readInt32();
 
             if (version == "2") {
-                std::size_t skip = sizeof(int32_t) * timecnt + timecnt + 6 * typecnt +
-                                   charcnt + 8 * leapcnt + isstdcnt + isgmtcnt;
+                std::size_t skip = sizeof(int32_t) * timecnt + timecnt + 6 * typecnt + charcnt +
+                                   8 * leapcnt + isstdcnt + isgmtcnt;
                 f.skip(skip);
 
                 head = f.readBytes(4);
-                if (head != "TZif")
-                    throw std::logic_error("bad head");
+                if (head != "TZif") throw std::logic_error("bad head");
                 f.skip(16);
                 return readDataBlock(&f, data, false);
             } else {
@@ -235,8 +224,7 @@ bool readTimeZoneFile(const char *zonefile, struct TimeZone::Data *data) {
                 f.skip(-4 * 6);  // Rewind to counters
                 return readDataBlock(&f, data, true);
             }
-        }
-        catch (std::logic_error &e) {
+        } catch (std::logic_error &e) {
             fprintf(stderr, "%s\n", e.what());
         }
     }
@@ -304,8 +292,8 @@ const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(int64_t utcTime) 
     return local;
 }
 
-const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(
-        const struct DateTime &lt, bool postTransition) const {
+const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(const struct DateTime &lt,
+                                                               bool postTransition) const {
     const int64_t localtime = fromUTCTime(lt);
 
     if (transitions.empty() || localtime < transitions.front().local_time) {
@@ -324,7 +312,8 @@ const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(
     }
 
     Transition prior_trans = *(transI - 1);
-    int64_t prior_second = transI->utc_time - 1 + local_times[prior_trans.local_time_index].utc_offset;
+    int64_t prior_second =
+            transI->utc_time - 1 + local_times[prior_trans.local_time_index].utc_offset;
 
     // row UTC time             isdst  offset  Local time (PRC)     Prior second local time
     //  1  1989-09-16 17:00:00Z   0      8.0   1989-09-17 01:00:00
@@ -337,7 +326,8 @@ const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(
     //  4  1991-04-13 18:00:00Z   1      9.0   1991-04-14 03:00:00  1991-04-14 01:59:59
     if (prior_second < localtime) {
         // it's a skip
-        // printf("SKIP: prev %ld local %ld start %ld\n", prior_second, localtime, transI->localtime);
+        // printf("SKIP: prev %ld local %ld start %ld\n", prior_second, localtime,
+        // transI->localtime);
         if (postTransition) {
             return &local_times[transI->local_time_index];
         } else {
@@ -354,7 +344,8 @@ const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(
     }
     if (localtime <= prior_second) {
         // it's repeat
-        // printf("REPEAT: prev %ld local %ld start %ld\n", prior_second, localtime, transI->localtime);
+        // printf("REPEAT: prev %ld local %ld start %ld\n", prior_second, localtime,
+        // transI->localtime);
         if (postTransition) {
             return &local_times[transI->local_time_index];
         } else {
@@ -367,14 +358,10 @@ const TimeZone::Data::LocalTime *TimeZone::Data::findLocalTime(
 }
 
 // static
-TimeZone TimeZone::UTC() {
-    return TimeZone(0, "UTC");
-}
+TimeZone TimeZone::UTC() { return TimeZone(0, "UTC"); }
 
 // static
-TimeZone TimeZone::China() {
-    return loadZoneFile("/usr/share/zoneinfo/Asia/Shanghai");
-}
+TimeZone TimeZone::China() { return loadZoneFile("/usr/share/zoneinfo/Asia/Shanghai"); }
 
 // static
 TimeZone TimeZone::loadZoneFile(const char *zonefile) {
@@ -385,12 +372,9 @@ TimeZone TimeZone::loadZoneFile(const char *zonefile) {
     return TimeZone(std::move(data));
 }
 
-TimeZone::TimeZone(std::unique_ptr<Data> data)
-        : data_(std::move(data)) {
-}
+TimeZone::TimeZone(std::unique_ptr<Data> data) : data_(std::move(data)) {}
 
-TimeZone::TimeZone(int eastOfUtc, const char *name)
-        : data_(new TimeZone::Data) {
+TimeZone::TimeZone(int eastOfUtc, const char *name) : data_(new TimeZone::Data) {
     data_->addLocalTime(eastOfUtc, false, 0);
     data_->abbreviation = name;
 }
@@ -433,17 +417,18 @@ int64_t TimeZone::fromUTCTime(const DateTime &dt) {
     return days * kSecondsPerDay + secondsInDay;
 }
 
-
 DateTime::DateTime(const struct tm &t)
-        : year(t.tm_year + 1900), month(static_cast<int8_t>(t.tm_mon + 1)),
-        day(static_cast<int8_t>(t.tm_mday)), hour(static_cast<int8_t>(t.tm_hour)),
-        minute(static_cast<int8_t>(t.tm_min)), second(static_cast<int8_t>(t.tm_sec)) {
-}
+    : year(t.tm_year + 1900),
+      month(static_cast<int8_t>(t.tm_mon + 1)),
+      day(static_cast<int8_t>(t.tm_mday)),
+      hour(static_cast<int8_t>(t.tm_hour)),
+      minute(static_cast<int8_t>(t.tm_min)),
+      second(static_cast<int8_t>(t.tm_sec)) {}
 
 std::string DateTime::toIsoString() const {
     char buf[64];
-    snprintf(buf, sizeof buf, "%04d-%02d-%02d %02d:%02d:%02d",
-             year, month, day, hour, minute, second);
+    snprintf(buf, sizeof buf, "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute,
+             second);
     return buf;
 }
 

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <sys/types.h>  // for off_t
+
 #include <cstddef>
 
-#include "noncopyable.h"
-#include "Types.h"
 #include "StringPiece.h"
+#include "Types.h"
+#include "noncopyable.h"
 
-namespace dws {
-namespace FileUtil {
+namespace dws::FileUtil {
 
 // read small file < 64KB
 class ReadSmallFile : noncopyable {
@@ -18,17 +18,14 @@ class ReadSmallFile : noncopyable {
     ~ReadSmallFile();
 
     // return errno
-    template<typename String>
-    int readToString(int maxSize,
-                     String* content,
-                     int64_t* fileSize,
-                     int64_t* modifyTime,
+    template <typename String>
+    int readToString(int maxSize, String* content, int64_t* fileSize, int64_t* modifyTime,
                      int64_t* createTime);
 
     // Read at maxium kBufferSize into buf_
     // return errno
     int readToBuffer(int* size);
-    const char *buffer() const { return buf_; }
+    const char* buffer() const { return buf_; }
 
  private:
     int fd_;
@@ -37,13 +34,9 @@ class ReadSmallFile : noncopyable {
 };
 
 // read the file content, returns errno if error happens.
-template<typename String>
-int readFile(StringArg filename,
-             int maxSize,
-             String* content,
-             int64_t* fileSize = NULL,
-             int64_t* modifyTime = NULL,
-             int64_t* createTime = NULL) {
+template <typename String>
+int readFile(StringArg filename, int maxSize, String* content, int64_t* fileSize = NULL,
+             int64_t* modifyTime = NULL, int64_t* createTime = NULL) {
     ReadSmallFile file(filename);
     return file.readToString(maxSize, content, fileSize, modifyTime, createTime);
 }
@@ -66,5 +59,4 @@ class AppendFile : noncopyable {
     off_t writtenBytes_;
 };
 
-}  // namespace FileUtil
-}  // namespace dws
+}  // namespace dws::FileUtil

@@ -1,20 +1,20 @@
 #pragma once
 
-#include <string>
 #include <atomic>
-#include <vector>
+#include <condition_variable>
 #include <memory>
 #include <mutex>
-#include <condition_variable>
+#include <string>
+#include <vector>
 
-#include "noncopyable.h"
-#include "Types.h"
 #include "BlockQueue.h"
 #include "BoundedBlockQueue.h"
 #include "CountDownLatch.h"
 #include "LogStream.h"
 #include "Thread.h"
 #include "ThreadAnnotations.h"
+#include "Types.h"
+#include "noncopyable.h"
 
 namespace dws {
 

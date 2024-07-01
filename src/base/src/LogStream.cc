@@ -1,10 +1,10 @@
 #include "LogStream.h"
 
-#include <cstdio>
-#include <limits>
-#include <cstring>
-#include <cinttypes>
 #include <algorithm>
+#include <cinttypes>
+#include <cstdio>
+#include <cstring>
+#include <limits>
 #include <type_traits>
 
 // TODO(diligentliu): better itoa.
@@ -25,7 +25,7 @@ const char digitsHex[] = "0123456789ABCDEF";
 static_assert(sizeof digitsHex == 17, "wrong number of digitsHex");
 
 // Efficient Integer to String Conversions, by Matthew Wilson.
-template<typename T>
+template <typename T>
 size_t convert(char buf[], T value) {
     T i = value;
     char *p = buf;
@@ -61,25 +61,21 @@ size_t convertHex(char buf[], uintptr_t value) {
     return p - buf;
 }
 
-template
-class FixedBuffer<kSmallBuffer>;
+template class FixedBuffer<kSmallBuffer>;
 
-template
-class FixedBuffer<kLargeBuffer>;
+template class FixedBuffer<kLargeBuffer>;
 
-template<int SIZE>
+template <int SIZE>
 const char *FixedBuffer<SIZE>::debugString() {
     *cur_ = '\0';
     return data_;
 }
 
-template<int SIZE>
-void FixedBuffer<SIZE>::cookieStart() {
-}
+template <int SIZE>
+void FixedBuffer<SIZE>::cookieStart() {}
 
-template<int SIZE>
-void FixedBuffer<SIZE>::cookieEnd() {
-}
+template <int SIZE>
+void FixedBuffer<SIZE>::cookieEnd() {}
 
 }  // namespace detail
 
@@ -92,7 +88,7 @@ void FixedBuffer<SIZE>::cookieEnd() {
  * [1.00T, 999T]
  * [1.00P, 999P]
  * [1.00E, inf)
-*/
+ */
 std::string formatSI(int64_t s) {
     double n = static_cast<double>(s);
     char buf[64];
@@ -139,7 +135,7 @@ std::string formatSI(int64_t s) {
  * [10.0Ki, 99.9Ki]
  * [ 100Ki, 1023Ki]
  * [1.00Mi, 9.99Mi]
-*/
+ */
 std::string formatIEC(int64_t s) {
     double n = static_cast<double>(s);
     char buf[64];
@@ -205,7 +201,7 @@ void LogStream::staticCheck() {
                   "kMaxNumericSize is large enough");
 }
 
-template<typename T>
+template <typename T>
 void LogStream::formatInteger(T v) {
     if (buffer_.avail() >= kMaxNumericSize) {
         size_t len = detail::convert(buffer_.current(), v);
@@ -272,7 +268,7 @@ LogStream &LogStream::operator<<(long double v) {
     return *this;
 }
 
-template<typename T>
+template <typename T>
 Fmt::Fmt(const char *fmt, T val) {
     static_assert(std::is_arithmetic<T>::value == true, "Must be arithmetic type");
 

@@ -1,14 +1,13 @@
 #pragma once
 
-#include <string>
-#include <mutex>
 #include <memory>
+#include <mutex>
+#include <string>
 
-#include "noncopyable.h"
 #include "Types.h"
+#include "noncopyable.h"
 
 namespace dws {
-
 namespace FileUtil {
 class AppendFile;
 }  // namespace FileUtil
@@ -35,9 +34,8 @@ class LogFile : noncopyable {
     std::unique_ptr<FileUtil::AppendFile> file_;
 
  public:
-    LogFile(const std::string &basename, off_t rollSize,
-            bool threadSafe = true, int flushInterval = 3,
-            int checkEveryN = 1024);
+    LogFile(const std::string &basename, off_t rollSize, bool threadSafe = true,
+            int flushInterval = 3, int checkEveryN = 1024);
     ~LogFile();
 
     void append(const char *logline, int len);

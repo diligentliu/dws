@@ -1,16 +1,17 @@
 #pragma once
 
-#include <string>
 #include <iosfwd>
+#include <string>
 
-#include "copyable.h"
 #include "Types.h"
+#include "copyable.h"
 
 namespace dws {
 
 class StringArg : public copyable {
  private:
     const char *str_;
+
  public:
     StringArg(const char *str)  // NOLINT
         : str_(str) {}
@@ -25,21 +26,13 @@ class StringPiece : public copyable {
     int length_;
 
  public:
-    StringPiece()
-        : ptr_(nullptr),
-          length_(0) {}
-    explicit StringPiece(const char *str)
-        : ptr_(str),
-          length_(static_cast<int>(strlen(ptr_))) {}
+    StringPiece() : ptr_(nullptr), length_(0) {}
+    explicit StringPiece(const char *str) : ptr_(str), length_(static_cast<int>(strlen(ptr_))) {}
     explicit StringPiece(const unsigned char *str)
-        : ptr_(reinterpret_cast<const char *>(str)),
-          length_(static_cast<int>(strlen(ptr_))) {}
+        : ptr_(reinterpret_cast<const char *>(str)), length_(static_cast<int>(strlen(ptr_))) {}
     explicit StringPiece(const std::string &str)
-        : ptr_(str.data()),
-          length_(static_cast<int>(str.size())) {}
-    explicit StringPiece(const char *offset, int len)
-        : ptr_(offset),
-          length_(len) {}
+        : ptr_(str.data()), length_(static_cast<int>(str.size())) {}
+    explicit StringPiece(const char *offset, int len) : ptr_(offset), length_(len) {}
 
     // unsafe, 因为可能会返回一个非 '\0' 结尾的 C 风格字符串
     const char *data() const { return ptr_; }
@@ -53,7 +46,7 @@ class StringPiece : public copyable {
         length_ = 0;
     }
 
-    void set(const char* buffer, int len) {
+    void set(const char *buffer, int len) {
         ptr_ = buffer;
         length_ = len;
     }
@@ -75,23 +68,18 @@ class StringPiece : public copyable {
         length_ -= n;
     }
 
-    void remove_suffix(int n) {
-        length_ -= n;
-    }
+    void remove_suffix(int n) { length_ -= n; }
 
     bool operator==(const StringPiece &x) const {
-        return ((length_ == x.length_) &&
-                (memcmp(ptr_, x.ptr_, length_) == 0));
+        return ((length_ == x.length_) && (memcmp(ptr_, x.ptr_, length_) == 0));
     }
 
-    bool operator!=(const StringPiece &x) const {
-        return !(*this == x);
-    }
+    bool operator!=(const StringPiece &x) const { return !(*this == x); }
 
-#define STRINGPIECE_BINARY_PREDICATE(cmp, auxcmp) \
-    bool operator cmp(const StringPiece &x) const { \
+#define STRINGPIECE_BINARY_PREDICATE(cmp, auxcmp)                                \
+    bool operator cmp(const StringPiece &x) const {                              \
         int r = memcmp(ptr_, x.ptr_, length_ < x.length_ ? length_ : x.length_); \
-        return ((r == 0) ? (length_ auxcmp x.length_) : (r cmp 0)); \
+        return ((r == 0) ? (length_ auxcmp x.length_) : (r cmp 0));              \
     }
     STRINGPIECE_BINARY_PREDICATE(<, <);
     STRINGPIECE_BINARY_PREDICATE(<=, <);
@@ -102,19 +90,17 @@ class StringPiece : public copyable {
     int compare(const StringPiece &x) const {
         int r = memcmp(ptr_, x.ptr_, length_ < x.length_ ? length_ : x.length_);
         if (r == 0) {
-            if (length_ < x.length_) r = -1;
-            else if (length_ > x.length_) r = +1;
+            if (length_ < x.length_)
+                r = -1;
+            else if (length_ > x.length_)
+                r = +1;
         }
         return r;
     }
 
-    std::string as_string() const {
-        return std::string(data(), size());
-    }
+    std::string as_string() const { return std::string(data(), size()); }
 
-    void CopyToString(std::string *target) const {
-        target->assign(ptr_, length_);
-    }
+    void CopyToString(std::string *target) const { target->assign(ptr_, length_); }
 
     bool starts_with(const StringPiece &x) const {
         return ((length_ >= x.length_) && (memcmp(ptr_, x.ptr_, x.length_) == 0));
@@ -132,12 +118,13 @@ class StringPiece : public copyable {
 
 #ifdef HAVE_TYPE_TRAITS
 // This makes vector<StringPiece> really fast for some STL implementations
-template<> struct __type_traits<dws::StringPiece> {
-    typedef __true_type    has_trivial_default_constructor;
-    typedef __true_type    has_trivial_copy_constructor;
-    typedef __true_type    has_trivial_assignment_operator;
-    typedef __true_type    has_trivial_destructor;
-    typedef __true_type    is_POD_type;
+template <>
+struct __type_traits<dws::StringPiece> {
+    typedef __true_type has_trivial_default_constructor;
+    typedef __true_type has_trivial_copy_constructor;
+    typedef __true_type has_trivial_assignment_operator;
+    typedef __true_type has_trivial_destructor;
+    typedef __true_type is_POD_type;
 };
 #endif
 

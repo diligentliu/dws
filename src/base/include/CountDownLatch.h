@@ -3,8 +3,8 @@
 #include <condition_variable>
 #include <mutex>
 
-#include "Types.h"
 #include "ThreadAnnotations.h"
+#include "Types.h"
 #include "noncopyable.h"
 
 namespace dws {
@@ -14,6 +14,7 @@ class CountDownLatch : noncopyable {
     mutable std::mutex mutex_;
     std::condition_variable condition_ GUARDED_BY(mutex_);
     int count_ GUARDED_BY(mutex_);
+
  public:
     explicit CountDownLatch(int count);
     void wait();

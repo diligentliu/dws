@@ -1,25 +1,25 @@
 #include "LogFile.h"
 
-#include <ctime>
 #include <cassert>
 #include <cstdio>
+#include <ctime>
 
 #include "FileUtil.h"
 #include "ProcessInfo.h"
 
 namespace dws {
 
-LogFile::LogFile(const std::string &basename, off_t rollSize,
-        bool threadSafe, int flushInterval, int checkEveryN)
-        : basename_(basename),
-          rollSize_(rollSize),
-          flushInterval_(flushInterval),
-          checkEveryN_(checkEveryN),
-          count_(0),
-          mutex_(threadSafe ? new std::mutex : nullptr),
-          startOfPeriod_(0),
-          lastRoll_(0),
-          lastFlush_(0) {
+LogFile::LogFile(const std::string &basename, off_t rollSize, bool threadSafe, int flushInterval,
+                 int checkEveryN)
+    : basename_(basename),
+      rollSize_(rollSize),
+      flushInterval_(flushInterval),
+      checkEveryN_(checkEveryN),
+      count_(0),
+      mutex_(threadSafe ? new std::mutex : nullptr),
+      startOfPeriod_(0),
+      lastRoll_(0),
+      lastFlush_(0) {
     assert(basename.find('/') == std::string::npos);
     rollFile();
 }

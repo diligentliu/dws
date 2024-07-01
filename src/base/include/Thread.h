@@ -1,5 +1,7 @@
 #pragma once
 
+#include <semaphore.h>
+
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -11,22 +13,9 @@
 namespace dws {
 
 class Thread : noncopyable {
-    using ThreadFunc = std::function<void()>;
-
- private:
-    void setDefaultName();
-
-    bool started_;
-    bool joined_;
-    std::shared_ptr<std::thread> thread_;
-    pid_t tid_;
-    ThreadFunc func_;
-    std::string name_;
-    static std::atomic_int numCreated_;
-    CountDownLatch latch_;
-
  public:
-    explicit Thread(ThreadFunc func, const std::string& name = std::string());
+    using ThreadFunc = std::function<void()>;
+    explicit Thread(ThreadFunc func, std::string name = std::string());
     ~Thread();
 
     void start();
@@ -37,6 +26,18 @@ class Thread : noncopyable {
     const std::string& name() const { return name_; }
 
     static int numCreated() { return numCreated_; }
+
+ private:
+    void setDefaultName();
+
+    bool started_;
+    bool joined_;
+    std::shared_ptr<std::thread> thread_;
+    pid_t tid_;
+    ThreadFunc func_;
+    std::string name_;
+    sem_t sem;
+    static std::atomic<int> numCreated_;
 };
 
 }  // namespace dws

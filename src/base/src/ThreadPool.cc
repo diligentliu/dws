@@ -2,19 +2,19 @@
 
 #include <cassert>
 #include <cstdio>
+#include <utility>
 
 #include "Exception.h"
 
 namespace dws {
 
-ThreadPool::ThreadPool(const std::string &name)
+ThreadPool::ThreadPool(std::string name)
     : mutex_(),
       notEmpty_(),
       notFull_(),
-      name_(name),
+      name_(std::move(name)),
       maxQueueSize_(0),
-      running_(false) {
-}
+      running_(false) {}
 
 ThreadPool::~ThreadPool() {
     if (running_) {
@@ -29,8 +29,7 @@ void ThreadPool::start(int numThreads) {
     for (int i = 0; i < numThreads; ++i) {
         char id[32];
         snprintf(id, sizeof(id), "%d", i + 1);
-        threads_.emplace_back(new Thread(
-            std::bind(&ThreadPool::runInThread, this), name_ + id));
+        threads_.emplace_back(new Thread([this] { runInThread(); }, name_ + id));
         threads_[i]->start();
     }
     if (numThreads == 0 && threadInitCallback_) {

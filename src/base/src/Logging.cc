@@ -119,13 +119,10 @@ Logger::Logger(SourceFile file, int line, LogLevel level, const char *func)
     impl_.stream_ << func << ' ';
 }
 
-Logger::Logger(SourceFile file, int line, LogLevel level)
-    : impl_(level, 0, file, line) {
-}
+Logger::Logger(SourceFile file, int line, LogLevel level) : impl_(level, 0, file, line) {}
 
 Logger::Logger(SourceFile file, int line, bool toAbort)
-    : impl_(toAbort ? FATAL : ERROR, errno, file, line) {
-}
+    : impl_(toAbort ? FATAL : ERROR, errno, file, line) {}
 
 Logger::~Logger() {
     impl_.finish();
@@ -137,20 +134,12 @@ Logger::~Logger() {
     }
 }
 
-void Logger::setLogLevel(Logger::LogLevel level) {
-    g_logLevel = level;
-}
+void Logger::setLogLevel(Logger::LogLevel level) { g_logLevel = level; }
 
-void Logger::setOutput(OutputFunc out) {
-    g_output = out;
-}
+void Logger::setOutput(OutputFunc out) { g_output = out; }
 
-void Logger::setFlush(FlushFunc flush) {
-    g_flush = flush;
-}
+void Logger::setFlush(FlushFunc flush) { g_flush = flush; }
 
-void Logger::setTimeZone(const TimeZone &tz) {
-    g_logTimeZone = tz;
-}
+void Logger::setTimeZone(const TimeZone &tz) { g_logTimeZone = tz; }
 
 }  // namespace dws

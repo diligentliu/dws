@@ -1,17 +1,17 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include <condition_variable>
 #include <deque>
 #include <functional>
 #include <memory>
 #include <mutex>
-#include <condition_variable>
+#include <string>
+#include <vector>
 
-#include "Types.h"
-#include "ThreadAnnotations.h"
-#include "noncopyable.h"
 #include "Thread.h"
+#include "ThreadAnnotations.h"
+#include "Types.h"
+#include "noncopyable.h"
 
 namespace dws {
 
@@ -33,7 +33,7 @@ class ThreadPool : noncopyable {
     Task take();
 
  public:
-    explicit ThreadPool(const std::string& name = std::string("ThreadPool"));
+    explicit ThreadPool(std::string name = std::string("ThreadPool"));
     ~ThreadPool();
 
     void setMaxQueueSize(uint64_t maxSize) { maxQueueSize_ = maxSize; }

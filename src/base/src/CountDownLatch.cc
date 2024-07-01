@@ -2,11 +2,7 @@
 
 namespace dws {
 
-CountDownLatch::CountDownLatch(int count)
-    : mutex_(),
-      condition_(),
-      count_(count) {
-}
+CountDownLatch::CountDownLatch(int count) : mutex_(), condition_(), count_(count) {}
 
 void CountDownLatch::wait() {
     std::unique_lock<std::mutex> lock(mutex_);

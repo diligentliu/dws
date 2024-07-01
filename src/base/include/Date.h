@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <utility>
+
 #include "Types.h"
 #include "copyable.h"
 
@@ -10,6 +13,7 @@ namespace dws {
 class Date : public copyable {
  private:
     int julianDayNumber_;
+
  public:
     struct YearMonthDay {
         int year;
@@ -25,57 +29,33 @@ class Date : public copyable {
     explicit Date(int julianDayNum) : julianDayNumber_(julianDayNum) {}
     explicit Date(const struct tm &);
 
-    void swap(Date &other) {
-        std::swap(julianDayNumber_, other.julianDayNumber_);
-    }
+    void swap(Date &other) { std::swap(julianDayNumber_, other.julianDayNumber_); }
 
-    bool valid() const {
-        return julianDayNumber_ > 0;
-    }
+    bool valid() const { return julianDayNumber_ > 0; }
 
     std::string toIsoString() const;
     YearMonthDay yearMonthDay() const;
     int julianDayNumber() const { return julianDayNumber_; }
 
-    int year() const {
-        return yearMonthDay().year;
-    }
+    int year() const { return yearMonthDay().year; }
 
-    int8_t month() const {
-        return yearMonthDay().month;
-    }
+    int8_t month() const { return yearMonthDay().month; }
 
-    int8_t day() const {
-        return yearMonthDay().day;
-    }
+    int8_t day() const { return yearMonthDay().day; }
 
-    int8_t weekDay() const {
-        return static_cast<int8_t>((julianDayNumber_ + 1) % kDaysPerWeek);
-    }
+    int8_t weekDay() const { return static_cast<int8_t>((julianDayNumber_ + 1) % kDaysPerWeek); }
 };
 
-inline bool operator<(Date x, Date y) {
-    return x.julianDayNumber() < y.julianDayNumber();
-}
+inline bool operator<(Date x, Date y) { return x.julianDayNumber() < y.julianDayNumber(); }
 
-inline bool operator>(Date x, Date y) {
-    return x.julianDayNumber() > y.julianDayNumber();
-}
+inline bool operator>(Date x, Date y) { return x.julianDayNumber() > y.julianDayNumber(); }
 
-inline bool operator==(Date x, Date y) {
-    return x.julianDayNumber() == y.julianDayNumber();
-}
+inline bool operator==(Date x, Date y) { return x.julianDayNumber() == y.julianDayNumber(); }
 
-inline bool operator>=(Date x, Date y) {
-    return x.julianDayNumber() >= y.julianDayNumber();
-}
+inline bool operator>=(Date x, Date y) { return x.julianDayNumber() >= y.julianDayNumber(); }
 
-inline bool operator<=(Date x, Date y) {
-    return x.julianDayNumber() <= y.julianDayNumber();
-}
+inline bool operator<=(Date x, Date y) { return x.julianDayNumber() <= y.julianDayNumber(); }
 
-inline bool operator!=(Date x, Date y) {
-    return x.julianDayNumber() != y.julianDayNumber();
-}
+inline bool operator!=(Date x, Date y) { return x.julianDayNumber() != y.julianDayNumber(); }
 
 }  // namespace dws

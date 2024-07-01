@@ -22,10 +22,9 @@ class Logger {
     // compile time calculation of basename of source file
     class SourceFile {
      public:
-        template<int N>
-        explicit SourceFile(const char (&arr)[N])
-                : data_(arr),
-                  size_(N - 1) {
+        template <int N>
+        SourceFile(const char (&arr)[N])  // NOLINT
+            : data_(arr), size_(N - 1) {
             const char *slash = strrchr(data_, '/');  // builtin function
             if (slash) {
                 data_ = slash + 1;
@@ -33,8 +32,8 @@ class Logger {
             }
         }
 
-        explicit SourceFile(const char *filename)
-                : data_(filename) {
+        SourceFile(const char *filename)  // NOLINT
+            : data_(filename) {
             const char *slash = strrchr(filename, '/');
             if (slash) {
                 data_ = slash + 1;
@@ -83,18 +82,19 @@ class Logger {
 
 extern Logger::LogLevel g_logLevel;
 
-inline Logger::LogLevel Logger::logLevel() {
-    return g_logLevel;
-}
+inline Logger::LogLevel Logger::logLevel() { return g_logLevel; }
 
-#define LOG(level) if (dws::Logger::logLevel() <= dws::Logger::level) \
-  dws::Logger(__FILE__, __LINE__, dws::Logger::level, __func__).stream()
-#define LOG_TRACE if (dws::Logger::logLevel() <= dws::Logger::TRACE) \
-  dws::Logger(__FILE__, __LINE__, dws::Logger::TRACE, __func__).stream()
-#define LOG_DEBUG if (dws::Logger::logLevel() <= dws::Logger::DEBUG) \
-  dws::Logger(__FILE__, __LINE__, dws::Logger::DEBUG, __func__).stream()
-#define LOG_INFO if (dws::Logger::logLevel() <= dws::Logger::INFO) \
-  dws::Logger(__FILE__, __LINE__).stream()
+#define LOG(level)                                     \
+    if (dws::Logger::logLevel() <= dws::Logger::level) \
+    dws::Logger(__FILE__, __LINE__, dws::Logger::level, __func__).stream()
+#define LOG_TRACE                                      \
+    if (dws::Logger::logLevel() <= dws::Logger::TRACE) \
+    dws::Logger(__FILE__, __LINE__, dws::Logger::TRACE, __func__).stream()
+#define LOG_DEBUG                                      \
+    if (dws::Logger::logLevel() <= dws::Logger::DEBUG) \
+    dws::Logger(__FILE__, __LINE__, dws::Logger::DEBUG, __func__).stream()
+#define LOG_INFO \
+    if (dws::Logger::logLevel() <= dws::Logger::INFO) dws::Logger(__FILE__, __LINE__).stream()
 #define LOG_WARN dws::Logger(__FILE__, __LINE__, dws::Logger::WARN).stream()
 #define LOG_ERROR dws::Logger(__FILE__, __LINE__, dws::Logger::ERROR).stream()
 #define LOG_FATAL dws::Logger(__FILE__, __LINE__, dws::Logger::FATAL).stream()
@@ -109,10 +109,10 @@ const char *strerror_tl(int savedErrno);
 // initializer lists.
 
 #define CHECK_NOTNULL(val) \
-  ::dws::CheckNotNull(__FILE__, __LINE__, "'" #val "' Must be non NULL", (val))
+    ::dws::CheckNotNull(__FILE__, __LINE__, "'" #val "' Must be non NULL", (val))
 
 // A small helper for CHECK_NOTNULL().
-template<typename T>
+template <typename T>
 T *CheckNotNull(Logger::SourceFile file, int line, const char *names, T *ptr) {
     if (ptr == NULL) {
         Logger(file, line, Logger::FATAL).stream() << names;
