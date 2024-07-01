@@ -12,7 +12,8 @@ set(CXX_FLAGS
     -Wall
     -Wextra
     -Werror
-    -Wconversion
+    # -Wconversion
+    -Wno-conversion
     -Wno-unused-parameter
     -Wold-style-cast
     -Woverloaded-virtual
@@ -20,7 +21,7 @@ set(CXX_FLAGS
     -Wshadow
     -Wwrite-strings
     -march=native
-    # -MMD
+    -MMD
     -std=c++17
     -rdynamic
 )

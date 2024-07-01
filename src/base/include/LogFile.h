@@ -8,7 +8,6 @@
 #include "Types.h"
 
 namespace dws {
-
 namespace FileUtil {
 class AppendFile;
 }  // namespace FileUtil

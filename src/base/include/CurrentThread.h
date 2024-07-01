@@ -4,9 +4,8 @@
 
 #include "Types.h"
 
-namespace dws {
+namespace dws::CurrentThread {
 
-namespace CurrentThread {
 // internal, in CurrentThread.cpp
 extern __thread int t_cachedTid;
 extern __thread char t_tidString[32];
@@ -36,10 +35,7 @@ inline const char *name() {
 }
 
 bool isMainThread();
-
 void sleepUsec(int64_t usec);
-
 std::string stackTrace(bool demangle);
-}  // namespace CurrentThread
 
-}  // namespace dws
+}  // namespace dws::CurrentThread

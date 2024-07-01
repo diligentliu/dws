@@ -8,8 +8,7 @@
 #include "Types.h"
 #include "Timestamp.h"
 
-namespace dws {
-namespace ProcessInfo {
+namespace dws::ProcessInfo {
 
 pid_t pid();
 std::string pidString();
@@ -49,6 +48,4 @@ int numThreads();
 
 std::vector<pid_t> threads();
 
-}  // namespace ProcessInfo
-}  // namespace dws
-
+}  // namespace dws::ProcessInfo

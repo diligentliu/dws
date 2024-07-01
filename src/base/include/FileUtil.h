@@ -7,8 +7,7 @@
 #include "Types.h"
 #include "StringPiece.h"
 
-namespace dws {
-namespace FileUtil {
+namespace dws::FileUtil {
 
 // read small file < 64KB
 class ReadSmallFile : noncopyable {
@@ -66,5 +65,4 @@ class AppendFile : noncopyable {
     off_t writtenBytes_;
 };
 
-}  // namespace FileUtil
-}  // namespace dws
+}  // namespace dws::FileUtil

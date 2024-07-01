@@ -23,7 +23,7 @@ class Logger {
     class SourceFile {
      public:
         template<int N>
-        explicit SourceFile(const char (&arr)[N])
+        SourceFile(const char (&arr)[N])  // NOLINT
                 : data_(arr),
                   size_(N - 1) {
             const char *slash = strrchr(data_, '/');  // builtin function
@@ -33,7 +33,7 @@ class Logger {
             }
         }
 
-        explicit SourceFile(const char *filename)
+        SourceFile(const char *filename)  // NOLINT
                 : data_(filename) {
             const char *slash = strrchr(filename, '/');
             if (slash) {
